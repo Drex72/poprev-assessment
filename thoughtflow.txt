@@ -1,0 +1,23 @@
+Perspective 1 (Customer Perspective)
+    Come onto the Application
+    Create an account
+    Log into your account
+    See all Projects available for contribution
+    Select a project to contribute
+    Invest into the project and you receive tokens worth the amount you invested
+    Check your poprev wallet to see your token information
+
+Perspective 2 (Artist Perspective)
+    Come onto the Application
+    Create an account
+    Log into your account
+    Create a proposal for your project
+    Wait for your proposal to be approved or rejected
+
+Perspective 3 (Admin perspective)
+    Come onto the Application
+    Create an account
+    Log into your account
+    See all Proposals 
+    Approve or Reject a proposal
+    If a proposal is Approved, it gets converted into a project

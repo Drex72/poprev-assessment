@@ -1,0 +1,52 @@
+version: "3.8"
+services:
+  api:
+    depends_on:
+      - database
+    links:
+      - database
+    build: ./
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      DATABASE_NAME: $DATABASE_NAME
+      DATABASE_HOST: ${DATABASE_HOST}
+      DATABASE_PORT: 5432
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_TYPE: ${DATABASE_TYPE}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      ACCESS_TOKEN_EXP: ${ACCESS_TOKEN_EXP}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}1000
+      REFRESH_TOKEN_EXP: ${REFRESH_TOKEN_EXP}
+      ENCRYPTOR_SECRET_KEY: ${ENCRYPTOR_SECRET_KEY}
+    ports:
+      - $DOCKER_PORT:$APPLICATION_PORT
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+      - /app/node_modules
+  database:
+    image: postgres
+    restart: always
+    container_name: database
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=poprev_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  pgdata:
+    driver: local
+ 
