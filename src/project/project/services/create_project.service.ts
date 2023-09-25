@@ -14,49 +14,58 @@ export class CreateProject {
     private readonly createTokenService: CreateProjectToken,
   ) {}
   create = async ({ input, user }: ControllerArgs<CreateProjectDto>) => {
-    if (!input) throw new BadRequestError("Invalid Input")
+    try {
+      if (!input) throw new BadRequestError("Invalid Input")
 
-    if (!user) throw new UnAuthorizedError("Unauthorized")
+      if (!user) throw new UnAuthorizedError("Unauthorized")
 
-    const { name, description, estimated_funding_amount, token_value } = input
+      const { name, description, estimated_funding_amount, token_value } = input
 
-    if (estimated_funding_amount < 1 || token_value < 1)
-      throw new BadRequestError("Invalid Input")
+      if (estimated_funding_amount < 1 || token_value < 1)
+        throw new BadRequestError("Invalid Input")
 
-    const duplicateProject = await this.dbProjects.findOne({ where: { name } })
+      const duplicateProject = await this.dbProjects.findOne({
+        where: { name },
+      })
 
-    if (duplicateProject) throw new Error("Project Already Exists")
+      if (duplicateProject) throw new Error("Project Already Exists")
 
-    if (token_value > estimated_funding_amount)
-      throw new BadRequestError("Token cannot be greater than fund amount")
+      if (token_value > estimated_funding_amount)
+        throw new BadRequestError("Token cannot be greater than fund amount")
 
-    // Create Project Token
-    const project_token = await this.createTokenService.create({
-      token_in_circulation: this.calculate_token_in_circulation({
-        token_value,
+      // Create Project Token
+      const project_token = await this.createTokenService.create({
+        token_in_circulation: this.calculate_token_in_circulation({
+          token_value,
+          estimated_funding_amount,
+        }),
+        token_name: this.create_token_name(name),
+        token_value: token_value,
+      })
+
+      const createdProject = await this.dbProjects.create({
+        artist: user.id,
+        amount_contributed: 0,
+        description,
         estimated_funding_amount,
-      }),
-      token_name: this.create_token_name(name),
-      token_value: token_value,
-    })
+        name,
+        project_token_id: project_token.token_id,
+      })
 
-    const createdProject = await this.dbProjects.create({
-      artist: user.id,
-      amount_contributed: 0,
-      description,
-      estimated_funding_amount,
-      name,
-      project_token_id: project_token.token_id,
-    })
-
-    return responseHandler.responseSuccess(
-      201,
-      "Project Created Successfully",
-      {
-        project: createdProject,
-        token: project_token,
-      },
-    )
+      return responseHandler.responseSuccess(
+        201,
+        "Project Created Successfully",
+        {
+          project: createdProject,
+          token: project_token,
+        },
+      )
+    } catch (error: any) {
+      return responseHandler.responseError(
+        400,
+        `Error Creating Project ${error?.message}`,
+      )
+    }
   }
 
   private create_token_name = (project_name: string) => {

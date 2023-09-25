@@ -22,6 +22,14 @@ projectRouter
   )
 
   .get(
+    "/pending-project-proposals",
+    ControlBuilder.builder()
+      .setHandler(findProposals.get_pending)
+      .isPrivate()
+      .only("ADMIN")
+      .handle(),
+  )
+  .get(
     "/artist-project-proposals",
     ControlBuilder.builder()
 

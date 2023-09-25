@@ -34,11 +34,30 @@ export class FindProposals {
         where: { artist: user.id },
       })
 
-      if(!allProposals) throw new BadRequestError("Artist does not have any Proposals")
+      if (!allProposals)
+        throw new BadRequestError("Artist does not have any Proposals")
 
       return responseHandler.responseSuccess(
         200,
         "Proposals Fetched Successfully",
+        allProposals,
+      )
+    } catch (error: any) {
+      return responseHandler.responseError(
+        400,
+        `Error Fetching Proposals ${error?.message}`,
+      )
+    }
+  }
+  public get_pending = async () => {
+    try {
+      const allProposals = await this.dbProposals.findAll({
+        where: { status: "PENDING" },
+      })
+
+      return responseHandler.responseSuccess(
+        200,
+        "Pending Proposals Fetched Successfully",
         allProposals,
       )
     } catch (error: any) {

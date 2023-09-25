@@ -39,8 +39,9 @@ export class DecideProposal {
             token_value: proposal.token_value,
           },
           user,
-        })
+        }) as any
       }
+
 
       await this.dbProposal.update(
         {
@@ -52,7 +53,7 @@ export class DecideProposal {
       return responseHandler.responseSuccess(
         200,
         "Proposal Decided Successfully",
-        project?.response.data,
+        project?.response?.data as any,
       )
     } catch (error: any) {
       return responseHandler.responseSuccess(
