@@ -10,12 +10,13 @@ import { SignUpDTO } from "../dto"
 import { Users } from "../models/user.model"
 import { Roles } from "../models"
 import { Wallet } from "../../user/wallet/models/wallet.model"
+import { WalletService } from "../../user/wallet/services/wallet.service"
 
 export class SignUp {
   constructor(
     private readonly dbUser: typeof Users,
     private readonly dbRoles: typeof Roles,
-    private readonly dbWallet: typeof Wallet,
+    private readonly walletService: WalletService,
   ) {}
 
   private checkIfRoleExists = async (role_id: string) => {
@@ -61,11 +62,9 @@ export class SignUp {
       }
 
       // Create the User
-      const newUser:any = await this.dbUser.create(data)
+      const newUser: any = await this.dbUser.create(data)
 
-      await this.dbWallet.create({
-        wallet_owner_id: newUser.id,
-      })
+      await this.walletService.create_wallet(newUser.id)
 
       delete newUser.password
 

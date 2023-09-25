@@ -1,5 +1,4 @@
 import { Router } from "express"
-import { controllerHandler } from "../../../core"
 import { createProposal, decideProposal, findProposals } from "../../proposals"
 import { createProject, findProjects } from "../services"
 import {
@@ -8,70 +7,78 @@ import {
   decideProposalSchema,
 } from "./schema"
 import { getTokenTransaction } from "../../token"
+import { ControlBuilder } from "../../../core/middlewares/controlBuilder"
 
 export const projectRouter = Router()
 
 projectRouter
   .get(
     "/project-proposals",
-    controllerHandler.handle(
-      findProposals.get_all,
-      {},
-      {
-        isPrivate: true,
-        allowedRoles: ["ADMIN"],
-      },
-    ),
+    ControlBuilder.builder()
+      .setHandler(findProposals.get_all)
+      .isPrivate()
+      .only("ADMIN")
+      .handle(),
   )
+
   .get(
     "/artist-project-proposals",
-    controllerHandler.handle(
-      findProposals.get_by_artists,
-      {},
-      {
-        isPrivate: true,
-        allowedRoles: ["ARTIST"],
-      },
-    ),
+    ControlBuilder.builder()
+
+      .setHandler(findProposals.get_by_artists)
+      .isPrivate()
+      .only("ARTIST")
+      .handle(),
   )
+
   .post(
     "/project-proposals",
-    controllerHandler.handle(createProposal.create, createProposalSchema, {
-      isPrivate: true,
-      allowedRoles: ["ARTIST"],
-    }),
+    ControlBuilder.builder()
+
+      .setHandler(createProposal.create)
+      .setValidator(createProposalSchema)
+      .isPrivate()
+      .only("ARTIST")
+      .handle(),
   )
+
   .post(
     "/project-proposal-decision",
-    controllerHandler.handle(decideProposal.decide, decideProposalSchema, {
-      isPrivate: true,
-      allowedRoles: ["ADMIN"],
-    }),
+    ControlBuilder.builder()
+
+      .setHandler(decideProposal.decide)
+      .setValidator(decideProposalSchema)
+      .isPrivate()
+      .only("ADMIN")
+      .handle(),
   )
 
 projectRouter
+
   .post(
     "/",
-    controllerHandler.handle(createProject.create, createProjectSchema, {
-      isPrivate: true,
-      allowedRoles: ["ADMIN"],
-    }),
+    ControlBuilder.builder()
+
+      .setHandler(createProject.create)
+      .setValidator(createProjectSchema)
+      .isPrivate()
+      .only("ADMIN")
+      .handle(),
   )
+
   .get(
     "/",
-    controllerHandler.handle(
-      findProjects.find_active_projects,
-      {},
-      {
-        isPrivate: true,
-      },
-    ),
+    ControlBuilder.builder()
+      .setHandler(findProjects.find_active_projects)
+      .isPrivate()
+      .handle(),
   )
+
   .get(
-    "/token-transactions",
-    controllerHandler.handle(
-      getTokenTransaction.getTokenTransactions,
-      {},
-      { isPrivate: true, allowedRoles: ["ADMIN"] },
-    ),
+    "/",
+    ControlBuilder.builder()
+      .setHandler(getTokenTransaction.getTokenTransactions)
+      .isPrivate()
+      .only("ADMIN")
+      .handle(),
   )

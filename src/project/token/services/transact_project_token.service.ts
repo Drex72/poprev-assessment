@@ -14,12 +14,6 @@ export class TransactToken {
   public makeTransaction = async (input: ProjectTransactionDto) => {
     const { amount, project_id, user_id, transactionType } = input
 
-    console.log(
-      this.dbProject,
-      "project",
-
-    )
-
     // const project = await this.dbProject.findOne({
     //   where: {
     //     project_id,
@@ -58,10 +52,10 @@ export class TransactToken {
 
       token.token_in_circulation = remaining_tokens
 
-      project.amount_contributed += amount
+      project.amount_contributed += amount * token.token_value
 
-      if (project.amount_contributed > project.estimated_funding_amount)
-        project.still_accepts_contribution = true
+      if (project.amount_contributed >= project.estimated_funding_amount)
+        project.still_accepts_contribution = false
     }
 
     if (transactionType === "SELL") {

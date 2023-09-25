@@ -9,12 +9,12 @@ import { Roles } from "../models"
 import { RoleService } from "./roles.service"
 import { RefreshAccessToken } from "./refreshAccessToken.service"
 import { GetAuthUser } from "./getAuthUser.service"
-import { Wallet } from "../../user/wallet/models/wallet.model"
+import { walletService } from "../../user/wallet/services/wallet.service"
 
 const tokenService = new TokenService(encryptor, Users)
 
 export const login = new Login(Users, tokenService)
-export const signup = new SignUp(Users, Roles, Wallet)
+export const signup = new SignUp(Users, Roles, walletService)
 export const logout = new Logout(Users)
 export const authGuard = new AuthGuard(tokenService)
 export const roleService = new RoleService(Roles)

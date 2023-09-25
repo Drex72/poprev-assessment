@@ -1,6 +1,5 @@
 import { Router } from "express"
 import { loginSchema, signUpSchema } from "./schema"
-import { controllerHandler } from "../../core"
 import {
   login,
   signup,
@@ -9,19 +8,48 @@ import {
   refreshAccessToken,
   getAuthUser,
 } from "../services"
+import { ControlBuilder } from "../../core/middlewares/controlBuilder"
 
 export const authRouter = Router()
 
 authRouter
   .get(
     "/user",
-    controllerHandler.handle(getAuthUser.handle, {}, { isPrivate: true }),
+    ControlBuilder.builder()
+      .setHandler(getAuthUser.handle)
+      .isPrivate()
+      .handle(),
   )
-  .post("/login", controllerHandler.handle(login.handle, loginSchema))
-  .post("/signup", controllerHandler.handle(signup.handle, signUpSchema))
+  .post(
+    "/login",
+    ControlBuilder.builder()
+      .setHandler(login.handle)
+      .setValidator(loginSchema)
+      .handle(),
+  )
+
+  .post(
+    "/signup",
+    ControlBuilder.builder()
+      .setHandler(signup.handle)
+      .setValidator(signUpSchema)
+      .handle(),
+  )
   .post(
     "/logout",
-    controllerHandler.handle(logout.handle, {}, { isPrivate: true }),
+    ControlBuilder.builder()
+      .setHandler(logout.handle)
+      .isPrivate()
+
+      .handle(),
   )
-  .get("/roles", controllerHandler.handle(roleService.findAll))
-  .get("/refresh-token", controllerHandler.handle(refreshAccessToken.refresh))
+
+  .get(
+    "/roles",
+    ControlBuilder.builder().setHandler(roleService.findAll).handle(),
+  )
+
+  .get(
+    "/refresh-token",
+    ControlBuilder.builder().setHandler(refreshAccessToken.refresh).handle(),
+  )
