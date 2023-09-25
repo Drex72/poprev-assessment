@@ -11,9 +11,9 @@ import { sequelize } from "../../../core"
 import { Wallet } from "./wallet.model"
 import { ProjectToken } from "../../../project/token"
 
-export class WalletInformation extends Model<
-  InferAttributes<WalletInformation>,
-  InferCreationAttributes<WalletInformation>
+export class WalletToken extends Model<
+  InferAttributes<WalletToken>,
+  InferCreationAttributes<WalletToken>
 > {
   declare wallet_information_id: CreationOptional<string>
   declare wallet_id: ForeignKey<string>
@@ -23,7 +23,7 @@ export class WalletInformation extends Model<
   declare deleted_at?: CreationOptional<Date>
 }
 
-WalletInformation.init(
+WalletToken.init(
   {
     wallet_information_id: {
       type: DataTypes.UUID,
@@ -57,7 +57,7 @@ WalletInformation.init(
   {
     sequelize,
     timestamps: true,
-    tableName: "wallet_information",
-    modelName: "wallet_information",
+    tableName: "wallet_tokens",
+    modelName: "wallet_tokens",
   },
 )

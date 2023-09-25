@@ -3,7 +3,7 @@ import { Projects } from "../../project"
 import { Proposal } from "../../project/proposals"
 import { ProjectToken, TokenTransactions } from "../../project/token"
 import { Wallet } from "../../user/wallet/models/wallet.model"
-import { WalletInformation } from "../../user/wallet/models/wallet_information.model"
+import { WalletToken } from "../../user/wallet/models/wallet_token"
 import { sequelize } from "../config"
 import { logger } from "../logging"
 
@@ -77,15 +77,14 @@ const handleSetAssociations = async () => {
     as: "walletOwner",
   })
 
-  // Wallet Information to Wallet Association
-  WalletInformation.belongsTo(Wallet, {
+  // Wallet Token to Wallet Association
+  WalletToken.belongsTo(Wallet, {
     foreignKey: "wallet_id",
-    as: "walletInfo",
+    as: "walletToken",
   })
 
-
   // Wallet Information to Project Token Association
-  WalletInformation.belongsTo(ProjectToken, {
+  WalletToken.belongsTo(ProjectToken, {
     foreignKey: "token_id",
     as: "projectToken",
   })

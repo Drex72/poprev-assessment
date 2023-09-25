@@ -6,7 +6,14 @@ import { transactProjectTokenSchema } from "./schema"
 export const userRouter = Router()
 
 userRouter
-  .get("/wallet")
+  .get(
+    "/wallet",
+    controllerHandler.handle(
+      userService.getUserWallet,
+      {},
+      { isPrivate: true, allowedRoles: ["USER"] },
+    ),
+  )
   .get(
     "/token-transactions",
     controllerHandler.handle(
