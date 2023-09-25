@@ -32,7 +32,6 @@ projectRouter
   .get(
     "/artist-project-proposals",
     ControlBuilder.builder()
-
       .setHandler(findProposals.get_by_artists)
       .isPrivate()
       .only("ARTIST")

@@ -61,28 +61,28 @@ Before you begin, ensure you have the following installed:
 
 2. **Database Configuration**:
 
-   Start the microservice in development mode using the following command:
+   Start the service in development mode using the following command:
 
    ```bash
    npm run start:dev
    ```
 
-   This will start the microservice using Node.js and connect it to the PostgreSQL database.
+   This will start the service using Node.js and connect it to the PostgreSQL database.
 
 ### Using Docker
 1. **Database Configuration**:
 
-   Start the microservice in development mode using the following command:
+   Start the service in development mode using the following command:
 
    ```bash
    docker-compose up
    ```
 
-   This will start the microservice using Docker.
+   This will start the service using Docker.
 
 ## Configuration
 
-The default configuration for the microservice and database connection is set up through the `docker-compose.yml` file. If you need to adjust any configurations, you can do so in this file.
+The default configuration for the service and database connection is set up through the `docker-compose.yml` file. If you need to adjust any configurations, you can do so in this file.
 
 ## License
 
